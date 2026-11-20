@@ -1,0 +1,36 @@
+name: Package skill
+
+# Every push to main that changes the skill builds ways-of-working.zip
+# (folder ways-of-working/ with SKILL.md inside, the layout claude.ai expects)
+# and attaches it to the "latest" release, so one fixed link always gives the newest zip.
+
+on:
+  push:
+    branches: [main]
+    paths: ["ways-of-working/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build zip
+        run: zip -r ways-of-working.zip ways-of-working
+
+      - name: Publish to the "latest" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SHORT_SHA="${GITHUB_SHA::7}"
+          if gh release view latest >/dev/null 2>&1; then
+            gh release upload latest ways-of-working.zip --clobber
+            gh release edit latest --notes "Built from commit ${SHORT_SHA}."
+          else
+            gh release create latest ways-of-working.zip \
+              --title "Latest skill" --notes "Built from commit ${SHORT_SHA}."
+          fi
