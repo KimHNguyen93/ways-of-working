@@ -212,7 +212,8 @@ conflict with the approval gate (§2), the gate wins.
 | Tests pass, before asking Kim for *approved* | `code-review` on the branch | Fix what it finds, or list it for Kim; never commit to get a review |
 | Before saying *done*, *fixed* or *deployed* | `superpowers:verification-before-completion` | Show the command or record that proves it, then say it |
 | SQL handed to Kim or the team to run | `data:sql-queries` | Read-only, commented, dialect named (MySQL / SuiteQL), expected row count |
-| Explain or diagram a repo, flow, schema or process ("diagram it", "archify it", "how does X work") | Archify (below). Use `miro:miro-code-explain-on-board` only when Kim gives a Miro board URL or says "Miro" | Diagrams grounded in the real code; unverified links marked UNKNOWN |
+| Diagram for people to read: rules, process, handoffs, decision logic for the team, LBLR business readers, an Asana task or slides | diagram-design (below) | Few boxes, plain words; PNG for Asana and slides, HTML for a page |
+| Diagram of code: repos, Celigo script paths, ERDs from the real schema, code traces ("archify it", "how does X work") | Archify (below). Use `miro:miro-code-explain-on-board` only when Kim gives a Miro board URL or says "Miro" | Each box linked to its source file and lines; unverified links marked UNKNOWN |
 | Visual review of a PR on a Miro board | `miro:miro-code-review`, only when Kim asks | Confirm before it edits the PR description |
 | Pull specs from a Miro board | `miro:miro-code-spec` | Read-only extract to local files; feeds the decision table |
 | Architecture choice between options (X vs Y) | `engineering:architecture` | Options and consequences for the decision row; does not replace §9 |
@@ -233,10 +234,38 @@ for SQL not `data:write-query`.
 PR comments), which runs ahead of the decision table / mockup and the approval gate. The decision table or mockup is
 the plan; *approved* is the finish.
 
-### Archify — diagrams from the repo link
+### Diagrams — pick by who reads it
+
+Choose the tool by the reader, not by the diagram type (both tools can draw ERDs, sequences and states):
+
+- **People read it** (team, LBLR business readers, Asana, slides) → diagram-design.
+- **Code is the subject** (repos, Celigo script paths, ERDs, traces; boxes link to source lines) → Archify.
+- One project may need both. Make them as separate diagrams, each naming its reader in the title. One diagram never
+  serves both readers.
+- Not sure who reads it → ask once, in one line.
+
+### diagram-design — diagrams people read
+
+Source: https://github.com/cathrynlavery/diagram-design, branch `main` (always the latest).
+
+1. Shallow-clone into the scratchpad: `git clone --depth 1 https://github.com/cathrynlavery/diagram-design <scratchpad>/diagram-design`.
+   Name the commit (`git rev-parse --short HEAD`) in the reply.
+2. Read `skills/diagram-design/SKILL.md` and follow it, except where these rules win:
+   - Its first-run brand question: use the brand saved in project memory. If none is saved, ask Kim once and save
+     the answer.
+   - Brand profiles live only in `~/.diagram-design/`. Never create or commit a `.diagram-design` marker in the
+     repo being worked on.
+   - Output goes in the scratchpad. Nothing it makes is committed.
+   - Its "state the plan before drawing" step is the mockup step (§2): show the plan, then draw.
+3. Deliver PNG for Asana and slides, HTML for a page. Order numbers and postcodes only — no customer names,
+   addresses, phones or emails.
+4. Clone fails → say so in one line and use `artifact-diagramming` instead.
+
+### Archify — diagrams of code
 
 Source: https://github.com/tt-a1i/archify, branch `main` (Kim's choice: always the latest).
-When: Kim asks to diagram, visualise or "archify" a repo, flow, schema or process.
+When: the diagram's subject is code — a repo, Celigo script paths, a schema or a trace. Boxes can only link to
+source lines for files in a git repo; anything else is marked UNKNOWN.
 
 1. Shallow-clone into the scratchpad: `git clone --depth 1 https://github.com/tt-a1i/archify <scratchpad>/archify`.
    Name the commit (`git rev-parse --short HEAD`) in the reply.
